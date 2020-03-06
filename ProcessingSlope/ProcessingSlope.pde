@@ -6,9 +6,6 @@ final int gravity = 9.8;
 final int friction = 0.1;
 final int bounce = 0.1;
 
-int camPosX = 0;
-int camPosY = 0;
-int camPosZ = 1;
 float d;
 float fov = 1.7;
 
