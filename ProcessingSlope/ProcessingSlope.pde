@@ -1,39 +1,61 @@
-float camPosX;
-float camPosY;
-float camPosZ;
-float time = 0;
+//spell wants something super simple very quickly so we can make a super shitty and non3d version
+//just to show him early to get that over with
+
 final float gravity = 9.8;
 final float friction = 0.1;
 final float bounce = 0.1;
 
-float d;
+PVector camPos = new PVector(0, 0, 0);
+float time = 0;
 float fov = 1.7;
+int segmentlength = 200; //if you go too low you may need to change segment offset a bit
+int segmentoffset = 1; //leave this at 1 for now
+float speed = 5;
+int roadsegments = 15;
+
 
 void setup() {
   size(500, 500, P3D);
-  camPosX = width/2.0;
-  camPosY = height/2.0;
-  camPosZ = (height/2.0) / tan(PI*30.0 / 180.0);
+  camPos.set(width/2.0, height/2.0, (height/2.0) / tan(PI*30.0 / 180.0));
+  frameRate(60);
 }
 
 void draw() {
-  time++;
-  background(255);
+  time += 1;
+  background(150);
+  camera(camPos.x, camPos.y, camPos.z, width/2.0, height/2.0, 0, 0, 1, 0);
 
-  camera(camPosX, camPosY, camPosZ, width/2.0, height/2.0, 0, 0, 1, 0);
+  for (int i = 0; i < roadsegments; i++) {
+    drawsegment(speed * time % segmentlength, -1 * segmentlength * (i - segmentoffset));
+  } //drawing all the segements of the road here
 
-  fill(0);
+  drawsphere();
+}
+
+void drawsegment(float move, int offset) {
+  fill(204, 102, 0);
   pushMatrix();
-  translate(50, 250);
-  rotateX(PI/2.5);
-  rect(0, 0, 400, 50);
+  translate(50, 300);
+  rotateX(beginningsequence());
+  rect(0, offset + move, 400, segmentlength);
   popMatrix();
+  
+  speed += 0.0001;
+  println(time);
+}
 
+void drawsphere() {
   pushMatrix();
-  translate(250, 200, 0);
-  rotateX(time/50);
+  translate(250, 290, 120);
+  rotateX(speed / 2.5 * time/60);
   noFill();
   sphereDetail(12);
-  sphere(100);
+  sphere(50);
   popMatrix();
+}
+
+float beginningsequence() {
+  if (time < 200) {
+    return time * PI/2.5 * 1/200;
+  } else return PI/2.5;
 }
