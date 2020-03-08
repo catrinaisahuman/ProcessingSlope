@@ -1,4 +1,4 @@
-# ProcessingSlope
+# Roadmap:
 
 ### Version 1
 Ball is rendered with some rolling animation.  
@@ -23,4 +23,11 @@ Powerups would be interesting
 ### Version 4
 Skinning  
 Background  
-Ball movement and parallax  
+Ball movement and parallax 
+
+# Questions and Suggestion
+
+### How will speed increase work? Will it increase or reach a stable point?  
+How about it reaching a point where it slowly increases?  
+Maybe if we always steadily increase but provide many opportunities to slow down?  
+I'm looking at something like 10x^0.5 where the rate of increase slows down but not asymptotically.
