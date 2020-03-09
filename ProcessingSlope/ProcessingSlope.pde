@@ -35,8 +35,6 @@ void draw() {
   } //drawing all the segements of the road here
 
   drawsphere();
-  
-  updatelocation();
 }
 
 void drawsegment(float move, int offset) {
