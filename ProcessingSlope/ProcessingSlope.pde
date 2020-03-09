@@ -10,8 +10,9 @@ float time = 0;
 float fov = 1.7;
 int segmentlength = 200; //if you go too low you may need to change segment offset a bit
 int segmentoffset = 1; //leave this at 1 for now
-float speed = 5;
+float speed = 2;
 int roadsegments = 15;
+int spheresize = 50;
 
 
 void setup() {
@@ -39,18 +40,19 @@ void drawsegment(float move, int offset) {
   rotateX(beginningsequence());
   rect(0, offset + move, 400, segmentlength);
   popMatrix();
-  
-  speed += 0.0001;
-  println(time);
+
+  //speed += 0.0001;
+  //println(time);
 }
 
 void drawsphere() {
   pushMatrix();
-  translate(250, 290, 120);
-  rotateX(speed / 2.5 * time/60);
-  noFill();
+  translate(250, 285, 120);
+  rotateX(speed * time / spheresize);
+  //noFill();
+  fill(23, 102, 0);
   sphereDetail(12);
-  sphere(50);
+  sphere(spheresize);
   popMatrix();
 }
 
