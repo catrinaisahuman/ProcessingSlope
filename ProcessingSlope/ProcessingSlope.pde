@@ -65,6 +65,6 @@ void drawsphere() {
 
 float beginningsequence(boolean animate) {
   if (time < 200 && animate) {
-    return time/200 * 9 * PI/16;
+    return time * PI/2.5 * 1/200;
   } else return 9 * PI/16;
 }
