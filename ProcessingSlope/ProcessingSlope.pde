@@ -17,10 +17,11 @@ float speedx = 8; // in units per second
 float speedz = 1; // in units per second
 float speedy = 0; // in units per second
 int roadSegments = 15;
-int spheResize = 50;
-int spheRedetail = 12;
+int sphereSize = 50;
+int sphereDetail = 12;
 boolean doAnimation = false;
 boolean[] keys = new boolean[4];
+float sphereSpeed = 0.2;
 
 void setup() {
   size(500, 500, P3D);
@@ -55,13 +56,13 @@ void drawSegment(float move, int offset) {
 void drawSphere() {
   pushMatrix();
   translate(masterP.x, masterP.y, masterP.z);
-  rotateX(speedx * time / spheResize);
-  rotateZ(speedz * time / spheResize);
-  rotateY(speedy * time / spheResize);
+  rotateX(speedx * time / sphereSize);
+  rotateZ(speedz * time / sphereSize);
+  rotateY(speedy * time / sphereSize);
   //noFill();
   fill(23, 102, 0);
-  sphereDetail(spheRedetail);
-  sphere(spheResize);
+  sphereDetail(sphereDetail);
+  sphere(sphereSize);
   popMatrix();
 }
 
@@ -100,11 +101,11 @@ void updatePos() {
   
   
   if (keys[1]) {
-    masterV = masterV.add(new PVector(-1, 0, 0));
+    masterV = masterV.add(new PVector(-sphereSpeed, 0, 0));
   }
 
   if (keys[3]) {
-    masterV = masterV.add(new PVector(1, 0, 0));
+    masterV = masterV.add(new PVector(sphereSpeed, 0, 0));
   }
   
   masterP = masterP.add(masterV);
