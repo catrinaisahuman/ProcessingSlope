@@ -57,8 +57,7 @@ void drawSphere() {
   pushMatrix();
   translate(masterP.x, masterP.y, masterP.z);
   rotateX(speedx * time / sphereSize);
-  rotateZ(speedz * time / sphereSize);
-  rotateY(speedy * time / sphereSize);
+  rotateZ(masterV.x/50 * time / sphereSize);
   //noFill();
   fill(23, 102, 0);
   sphereDetail(sphereDetail);
