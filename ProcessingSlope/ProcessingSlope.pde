@@ -76,24 +76,25 @@ float beginningSequence(boolean animate) {
 void keyPressed() {
   if (key=='w')
     keys[0]=true;
-  if (key=='a')
+  if (key=='a' || keyCode == LEFT)
     keys[1]=true;
-  if (key=='s')
+  if (key=='x')
     keys[2]=true;
-  if (key=='d')
+  if (key=='d' || keyCode == RIGHT)
     keys[3]=true;
 }
 
 void keyReleased() {
   if (key=='w')
     keys[0]=false;
-  if (key=='a')
+  if (key=='a' || keyCode == LEFT)
     keys[1]=false;
-  if (key=='s')
+  if (key=='x')
     keys[2]=false;
-  if (key=='d')
+  if (key=='d' || keyCode == RIGHT)
     keys[3]=false;
 }
+
 
 void updatePos() {
   masterV.mult(friction);
