@@ -2,9 +2,9 @@ float camPosX;
 float camPosY;
 float camPosZ;
 float time = 0;
-final int gravity = 9.8;
-final int friction = 0.1;
-final int bounce = 0.1;
+final float gravity = 9.8;
+final float friction = 0.1;
+final float bounce = 0.1;
 
 float d;
 float fov = 1.7;
