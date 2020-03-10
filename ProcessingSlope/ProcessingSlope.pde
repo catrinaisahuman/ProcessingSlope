@@ -12,6 +12,7 @@ float countdown = 400;
 float countdownStorage = 0;
 float annoyLength = 200;
 float waitingTime = 100;
+int keycounter = 0; //basically what this does is track how long you've been holding a key down so we can mess with people
 
 //setup variables
 //config variables
@@ -23,8 +24,8 @@ float fov = 1.7;
 int segmentOffset = 1; //leave this at 1 for now
 int roadSegments = 30;
 int sphereDetail = 12;
-boolean doAnimation = false;
-float tickSpeed = 3; //starter value of tickspeed
+boolean doAnimation = true;
+float tickSpeed = 1; //starter value of tickspeed
 float rotationControl = 30; //less means more control
 boolean doAnnoy = true;
 //these are relative in comparison to a 500x500 screen but will be adjusted before running
@@ -49,8 +50,9 @@ void setup() {
   textSize(128);
   makeRelative();
   smooth();
-  if (coolRenderMode)
+  if (coolRenderMode) {
     noStroke();
+  }
 }
 
 void makeRelative() {
@@ -137,14 +139,15 @@ void draw() {
 
     updatePos();
     checkRestart();
-    
+
+    fuckYouDie();
+
     pushMatrix();
     score = floor(time/200);
-    stroke(10);
     fill(255, 0, 0);
     text(score, width/2, height/2, -900);
-    
-    text(tickSpeedModified, width/2 , height/2 - 200, -900);
+
+    text(keycounter, width/2, height/2 - 200, -900);
     text(int(time), width/2, height/2 - 400, -900);
     text("DEBUG", width/2, height/2 - 600, -900);
     popMatrix();
@@ -280,5 +283,16 @@ class Tower {
     translate(position.x, position.y + offset, position.z + move);
     box(towerSize);
     popMatrix();
+  }
+}
+
+void fuckYouDie() {
+  if (keys[1] || keys[3]) {
+    keycounter += 1;
+  } else keycounter = 0;
+
+  if (keycounter >= random(100, 150)) { //because predictability is wrong
+    randomMove.mult(-1); //reverse the direction of the drift
+    keycounter = 0; //set counter back
   }
 }
