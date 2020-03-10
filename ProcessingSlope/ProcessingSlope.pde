@@ -4,14 +4,14 @@ PVector masterV = new PVector(0, 0, 0);
 PVector masterP = new PVector();
 PVector camPos = new PVector();
 PVector randomMove = new PVector(0, 0, 0);
-int time = 0;
+float time = 0;
 boolean[] keys = new boolean[4];
 boolean dead = false;
 int score = 0;
-int countdown = 400;
-int countdownStorage = 0;
-int annoyLength = 200;
-int waitingTime = 100;
+float countdown = 400;
+float countdownStorage = 0;
+float annoyLength = 200;
+float waitingTime = 100;
 
 //setup variables
 
@@ -25,7 +25,7 @@ int segmentOffset = 1; //leave this at 1 for now
 int roadSegments = 30;
 int sphereDetail = 12;
 boolean doAnimation = false;
-int tickSpeed = 1;
+float tickSpeed = 1;
 float rotationControl = 30; //less means more control
 //these are relative in comparison to a 500x500 screen but will be adjusted before running
 float sphereControl = 0.2;
@@ -38,7 +38,7 @@ PVector rectPos = new PVector(50, 350);
 float rotateX, rotateZ;
 
 void setup() {
-  size(500, 500, P3D);
+  size(1000, 1000, P3D);
   frameRate(60);
   textSize(128);
   makeRelative();
@@ -57,7 +57,8 @@ void makeRelative() {
 }
 
 void draw() {
-
+  
+  
   rotateX = speedx * time / sphereSize;
   rotateZ = masterV.x/rotationControl * time / sphereSize;
 
@@ -77,11 +78,12 @@ void draw() {
 
     //this section only runs on death
   } else {
-
     time += tickSpeed;
     countdown += -tickSpeed;
     background(150);
     camera(camPos.x, camPos.y - 0.4 * height, camPos.z + 0.08 * width, width/2.0, height/2.0, 0, 0, 1, 0);
+    
+    tickSpeed = 1 + 0.04 * score;
 
     for (int i = 0; i < roadSegments; i++) {
       drawSegment(speedx * time % segmentLength, -1 * segmentLength * (i - segmentOffset));
@@ -96,6 +98,7 @@ void draw() {
     drawSphere();
     updatePos();
     checkRestart();
+    text(score, width/16, height/3, time % 2000 - 900); 
 
     score = floor(time/200);
 
@@ -185,7 +188,7 @@ void checkRestart() {
 
 void annoy() {
   randomMove.set(random(-0.22, 0.22), 0, 0);
-  waitingTime = int(random(-100, 600));
-  countdownStorage = int(random(100, 600));
+  waitingTime = int(random(-100, 100));
+  countdownStorage = int(random(100, 1000));
   countdown = waitingTime + annoyLength + countdownStorage;
 }
