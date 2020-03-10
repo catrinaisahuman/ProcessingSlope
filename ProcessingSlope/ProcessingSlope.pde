@@ -3,10 +3,15 @@
 PVector masterV = new PVector(0, 0, 0);
 PVector masterP = new PVector();
 PVector camPos = new PVector();
-float time = 0;
+PVector randomMove = new PVector(0, 0, 0);
+int time = 0;
 boolean[] keys = new boolean[4];
 boolean dead = false;
 int score = 0;
+int countdown = 400;
+int countdownStorage = 0;
+int annoyLength = 200;
+int waitingTime = 100;
 
 //setup variables
 
@@ -52,28 +57,29 @@ void makeRelative() {
 }
 
 void draw() {
-  
+
   rotateX = speedx * time / sphereSize;
   rotateZ = masterV.x/rotationControl * time / sphereSize;
-  
+
   if (dead) {
     time += tickSpeed;
-    
-    text("DEAD", width/2 - 0.4 * width, height/2,  time - 0.8 * width); 
+
+    text("DEAD", width/2 - 0.4 * width, height/2, time - 0.8 * width); 
     text("PRESS X", width/2 - 0.4 * width, height/2 - 0.2 * height, time - 0.8 * width);
-    
+
     if ( time > 1000 ) {
       tickSpeed = 0; //timeout to stop text movement
     }
+    masterV.set(0, 0, 0);
+    randomMove.set(0, 0, 0);
 
     checkRestart();
-    
+
     //this section only runs on death
   } else {
 
-
-
     time += tickSpeed;
+    countdown += -tickSpeed;
     background(150);
     camera(camPos.x, camPos.y - 0.4 * height, camPos.z + 0.08 * width, width/2.0, height/2.0, 0, 0, 1, 0);
 
@@ -85,13 +91,19 @@ void draw() {
       dead = true;
       time = 0;
     }
-    println(score);
+    println(countdown);
 
     drawSphere();
     updatePos();
     checkRestart();
 
     score = floor(time/200);
+
+    if (countdown <= 0) {
+      annoy();
+    } else if (countdown > annoyLength && countdown - countdownStorage - annoyLength < 0) {
+      masterV.add(randomMove);
+    }
   }
 }
 
@@ -166,5 +178,14 @@ void checkRestart() {
     masterV.set(0, 0, 0);
     dead = false;
     score = 0;
+    countdown = 400;
+    annoyLength = 200;
   }
+}
+
+void annoy() {
+  randomMove.set(random(-0.22, 0.22), 0, 0);
+  waitingTime = int(random(-100, 600));
+  countdownStorage = int(random(100, 600));
+  countdown = waitingTime + annoyLength + countdownStorage;
 }
