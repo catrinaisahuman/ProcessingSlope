@@ -25,11 +25,11 @@ final float annoyWait = 200;
 //more config variables
 float fov = 1.7;
 int segmentOffset = 1; //leave this at 1 for now
-int roadSegments = 30;
+int roadSegments = 50;
 int sphereDetail = 12;
-boolean doAnimation = false;
+boolean doAnimation = true;
 float rotationRenderControl = 30; //less means more control
-boolean doAnnoy = true;
+boolean doAnnoy = false;
 //these are relative in comparison to a 500x500 screen but will be adjusted before running
 float sphereControl = 0.2;
 float sphereSize = 50;
@@ -37,6 +37,8 @@ float speedx = 8; // in units per second
 float segmentLength = 200; //if you go too low you may need to change segment offset a bit
 PVector startingPos = new PVector(250, 275, 120);
 PVector rectPos = new PVector(50, 350);
+PVector towerPosLeft = new PVector(50, 0, 0);
+PVector towerPosRight = new PVector(950, 0, 0);
 int towerSize = 100;
 int towerSegments = 30;
 boolean coolRenderMode = false;
@@ -44,8 +46,8 @@ float hardness = 1;
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 float rotateX, rotateZ;
 float tickSpeedModified; //for modulating tickspeed inside draw()
-Tower towerLeft1, towerLeft2, towerLeft3, towerLeft4, towerLeft5;
-Tower towerRight1, towerRight2, towerRight3, towerRight4, towerRight5;
+Tower towerLeft1, towerLeft2, towerLeft3, towerLeft4, towerLeft5, towerLeft6, towerLeft7, towerLeft8, towerLeft9, towerLeft10;
+Tower towerRight1, towerRight2, towerRight3, towerRight4, towerRight5, towerRight6, towerRight7, towerRight8, towerRight9, towerRight10;
 float annoyWaitModified;
 
 void setup() {
@@ -57,6 +59,8 @@ void setup() {
   if (coolRenderMode) {
     noStroke();
   }
+  textAlign(CENTER);
+  perspective(PI/3.0, width/height, camPos.z/10.0, camPos.z*200.0);
 }
 
 
@@ -71,19 +75,38 @@ void makeRelative() {
   sphereSize = sphereSize/500 * width;
   speedx = speedx/500 * width;
   sphereControl = sphereControl/500 * width;
-  towerLeft1 = new Tower(50, -100, -900, 30);
-  towerLeft2 = new Tower(50, -300, -2900, 30);
-  towerLeft3 = new Tower(50, -600, -4900, 30);
-  towerLeft4 = new Tower(50, -800, -6900, 40);
-  towerLeft5 = new Tower(50, -1000, -8900, 50);
-  towerRight1 = new Tower(950, -100, -900, 30);
-  towerRight2 = new Tower(950, -300, -2900, 30);
-  towerRight3 = new Tower(950, -600, -4900, 30);
-  towerRight4 = new Tower(950, -800, -6900, 40);
-  towerRight5 = new Tower(950, -1000, -8900, 50);
+  towerLeft1 =  new Tower(towerPosLeft.x, towerHeight(1), towerOffset(1), towerSegments);
+  towerLeft2 =  new Tower(towerPosLeft.x, towerHeight(2), towerOffset(2), towerSegments);
+  towerLeft3 =  new Tower(towerPosLeft.x, towerHeight(3), towerOffset(3), towerSegments);
+  towerLeft4 =  new Tower(towerPosLeft.x, towerHeight(4), towerOffset(4), towerSegments);
+  towerLeft5 =  new Tower(towerPosLeft.x, towerHeight(5), towerOffset(5), towerSegments);
+  towerLeft6 =  new Tower(towerPosLeft.x, towerHeight(6), towerOffset(6), towerSegments);
+  towerLeft7 =  new Tower(towerPosLeft.x, towerHeight(7), towerOffset(7), towerSegments);
+  towerLeft8 =  new Tower(towerPosLeft.x, towerHeight(8), towerOffset(8), towerSegments);
+  towerLeft9 =  new Tower(towerPosLeft.x, towerHeight(9), towerOffset(9), towerSegments);
+  towerLeft10 = new Tower(towerPosLeft.x, towerHeight(10), towerOffset(10), towerSegments);
+
+  towerRight1 =  new Tower(towerPosRight.x, towerHeight(1), towerOffset(1), towerSegments);
+  towerRight2 =  new Tower(towerPosRight.x, towerHeight(2), towerOffset(2), towerSegments);
+  towerRight3 =  new Tower(towerPosRight.x, towerHeight(3), towerOffset(3), towerSegments);
+  towerRight4 =  new Tower(towerPosRight.x, towerHeight(4), towerOffset(4), towerSegments);
+  towerRight5 =  new Tower(towerPosRight.x, towerHeight(5), towerOffset(5), towerSegments);
+  towerRight6 =  new Tower(towerPosRight.x, towerHeight(6), towerOffset(6), towerSegments);
+  towerRight7 =  new Tower(towerPosRight.x, towerHeight(7), towerOffset(7), towerSegments);
+  towerRight8 =  new Tower(towerPosRight.x, towerHeight(8), towerOffset(8), towerSegments);
+  towerRight9 =  new Tower(towerPosRight.x, towerHeight(9), towerOffset(9), towerSegments);
+  towerRight10 =  new Tower(towerPosRight.x, towerHeight(10), towerOffset(10), towerSegments);
 
 
-  textAlign(CENTER);
+  
+}
+
+int towerOffset(int i) {
+  return -900 - 2000 * (i - 1);
+}
+
+int towerHeight(int i) {
+  return 400 * (i - 2);
 }
 
 void draw() {
@@ -129,11 +152,21 @@ void draw() {
     towerLeft3.render();
     towerLeft4.render();
     towerLeft5.render();   
+    towerLeft6.render();
+    towerLeft7.render();
+    towerLeft8.render();
+    towerLeft9.render();
+    towerLeft10.render();  
     towerRight1.render();
     towerRight2.render();
     towerRight3.render();
     towerRight4.render();
     towerRight5.render();
+    towerRight6.render();
+    towerRight7.render();
+    towerRight8.render();
+    towerRight9.render();
+    towerRight10.render();
     drawSphere();
 
     checkDeath();
@@ -170,37 +203,9 @@ void draw() {
     //popMatrix();
 
     println(countdown);
-    
-    
   }
 }
 
-void drawSegment(float move, float offset) {
-  fill(204, 102, 0);
-  pushMatrix();
-  translate(rectPos.x, rectPos.y);
-  rotateX(beginningSequence(doAnimation));
-  rect(0, offset + move, 4 * width / 5, segmentLength);
-  popMatrix();
-}
-
-void drawSphere() {
-  pushMatrix();
-  translate(masterP.x, masterP.y, masterP.z);
-  rotateX(rotateX);
-  rotateZ(rotateZ);
-  //noFill();
-  fill(23, 102, 0);
-  sphereDetail(sphereDetail);
-  sphere(sphereSize);
-  popMatrix();
-}
-
-float beginningSequence(boolean animate) {
-  if (time < 200 && animate) {
-    return time/200 * 9 * PI/16;
-  } else return 9 * PI/16;
-}
 
 void keyPressed() {
   if (key=='w')
@@ -275,29 +280,6 @@ void annoy() {
 }
 
 
-class Tower {
-  PVector position = new PVector(0, 0, 0);
-  int segmentsx;
-  Tower(float x, float y, float z, int segments) {
-    position.set(x, y, z);
-    segmentsx = segments;
-  }
-
-  void render() {
-    for (int i = 0; i < segmentsx; i++) {
-      drawBox(speedx * (time % 250), towerSize * i - 3.2 * (time % 155));
-    }
-  }
-
-  void drawBox(float move, float offset) {
-    fill(204, 102, 0);
-    pushMatrix();
-    translate(position.x, position.y + offset, position.z + move);
-    box(towerSize);
-    popMatrix();
-  }
-}
-
 void fuckYouDie() {
   if (keys[1] || keys[3]) {
     keycounter += 1;
@@ -309,12 +291,6 @@ void fuckYouDie() {
   }
 }
 
-
-void drawRoad() {
-  for (int i = 0; i < roadSegments; i++) {
-    drawSegment(speedx * time % segmentLength, -1 * segmentLength * (i - segmentOffset));
-  } //drawing all the segements of the road here
-}
 
 void checkDeath() {
   if (masterP.x > 0.886 * width || masterP.x < 0.116 * width) {
