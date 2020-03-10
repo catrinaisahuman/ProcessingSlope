@@ -92,8 +92,9 @@ void draw() {
   if (dead) {
     time += tickSpeedModified;
 
-    text("DEAD", width/2 - 0.4 * width, height/2, time - 0.8 * width); 
-    text("PRESS X", width/2 - 0.4 * width, height/2 - 0.2 * height, time - 0.8 * width);
+    text("DEAD", camPos.x, camPos.y + 600, time - 0.8 * width); 
+
+    text("PRESS X", camPos.x, camPos.y + 800, time - 0.8 * width);
 
     if ( time > 1000 ) {
       tickSpeed = 0; //timeout to stop text movement
@@ -142,15 +143,15 @@ void draw() {
 
     fuckYouDie();
 
-    pushMatrix();
+    //pushMatrix();
     score = floor(time/200);
     fill(255, 0, 0);
-    text(score, width/2, height/2, -900);
+    text(score, camPos.x, camPos.y + 400, -900);
 
-    text(keycounter, width/2, height/2 - 200, -900);
-    text(int(time), width/2, height/2 - 400, -900);
-    text("DEBUG", width/2, height/2 - 600, -900);
-    popMatrix();
+    text(keycounter, camPos.x, camPos.y + 200, -900);
+    text(int(time), camPos.x, camPos.y, -900);
+    //text("DEBUG", width/2, height/2 - 600, -900);
+    //popMatrix();
 
 
     //text(score, 17, 1200 - 3.2 * (time % 500), -4700 + speedx * (time % 500));
