@@ -7,6 +7,7 @@ float time = 0;
 boolean[] keys = new boolean[4];
 boolean dead = false;
 int score = 0;
+
 //setup variables
 
 //config variables
@@ -28,6 +29,8 @@ float speedx = 8; // in units per second
 float segmentLength = 200; //if you go too low you may need to change segment offset a bit
 PVector startingPos = new PVector(250, 275, 120);
 PVector rectPos = new PVector(50, 350);
+//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+float rotateX, rotateZ;
 
 void setup() {
   size(500, 500, P3D);
@@ -49,11 +52,15 @@ void makeRelative() {
 }
 
 void draw() {
+  
+  rotateX = speedx * time / sphereSize;
+  rotateZ = masterV.x/rotationControl * time / sphereSize;
+  
   if (dead) {
     time += tickSpeed;
     
-    text("DEAD", width/2 - 0.4 * width, height/2,  time - 400); 
-    text("PRESS X", width/2 - 0.4 * width, height/2 - 0.2 * height, time - 400);
+    text("DEAD", width/2 - 0.4 * width, height/2,  time - 0.8 * width); 
+    text("PRESS X", width/2 - 0.4 * width, height/2 - 0.2 * height, time - 0.8 * width);
     
     if ( time > 1000 ) {
       tickSpeed = 0; //timeout to stop text movement
@@ -100,8 +107,8 @@ void drawSegment(float move, float offset) {
 void drawSphere() {
   pushMatrix();
   translate(masterP.x, masterP.y, masterP.z);
-  rotateX(speedx * time / sphereSize);
-  rotateZ(masterV.x/rotationControl * time / sphereSize);
+  rotateX(rotateX);
+  rotateZ(rotateZ);
   //noFill();
   fill(23, 102, 0);
   sphereDetail(sphereDetail);
