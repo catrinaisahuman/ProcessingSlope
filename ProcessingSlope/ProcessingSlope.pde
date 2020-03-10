@@ -1,4 +1,4 @@
-// DESERTSLOPE BY WILLDEPUE && ELIJAHSMITH
+// SlopeV2 BY WILLDEPUE && ELIJAHSMITH
 //setup variables
 PVector masterV = new PVector(0, 0, 0);
 PVector masterP = new PVector();
