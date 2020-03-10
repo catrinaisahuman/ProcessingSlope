@@ -14,7 +14,7 @@ float annoyLength = 200;
 float waitingTime = 100;
 
 //setup variables
-
+PVector towerPos = new PVector(0, 0, 0);
 //config variables
 final float gravity = 9.8;
 final float friction = 0.95;
@@ -25,8 +25,9 @@ int segmentOffset = 1; //leave this at 1 for now
 int roadSegments = 30;
 int sphereDetail = 12;
 boolean doAnimation = false;
-float tickSpeed = 1;
+float tickSpeed = 4; //starter value of tickspeed
 float rotationControl = 30; //less means more control
+boolean doAnnoy = true;
 //these are relative in comparison to a 500x500 screen but will be adjusted before running
 float sphereControl = 0.2;
 float sphereSize = 50;
@@ -36,16 +37,18 @@ PVector startingPos = new PVector(250, 275, 120);
 PVector rectPos = new PVector(50, 350);
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 float rotateX, rotateZ;
+float tickSpeedModified; //for modulating tickspeed inside draw()
 
 void setup() {
   size(1000, 1000, P3D);
   frameRate(60);
   textSize(128);
   makeRelative();
+  smooth();
 }
 
 void makeRelative() {
-  camPos.set(width/2.0, height/2.0, (height/2.0) / tan(PI*30.0 / 180.0));
+  camPos.set(width/2.0, height/2.0 - 0.4 * height, (height/2.0) / tan(PI*30.0 / 180.0) + 0.08 * width);
   rectPos.set(width * 0.1, height * 0.7);
   startingPos.mult(0.002);
   startingPos.set(width * startingPos.x, height * startingPos.y, width * startingPos.z);
@@ -57,13 +60,15 @@ void makeRelative() {
 }
 
 void draw() {
-  
-  
+
+  pointLight(255, 255, 255, 15* width/16, 0, 900 - time);
+  ambientLight(20, 90, 20, width/2, 0, 0);
+
   rotateX = speedx * time / sphereSize;
   rotateZ = masterV.x/rotationControl * time / sphereSize;
 
   if (dead) {
-    time += tickSpeed;
+    time += tickSpeedModified;
 
     text("DEAD", width/2 - 0.4 * width, height/2, time - 0.8 * width); 
     text("PRESS X", width/2 - 0.4 * width, height/2 - 0.2 * height, time - 0.8 * width);
@@ -78,12 +83,12 @@ void draw() {
 
     //this section only runs on death
   } else {
-    time += tickSpeed;
-    countdown += -tickSpeed;
+    time += tickSpeedModified;
+
     background(150);
-    camera(camPos.x, camPos.y - 0.4 * height, camPos.z + 0.08 * width, width/2.0, height/2.0, 0, 0, 1, 0);
-    
-    tickSpeed = 1 + 0.04 * score;
+    camera(camPos.x, camPos.y , camPos.z , camPos.x, camPos.y + 0.4 * height, 0, 0, 1, 0);
+
+    tickSpeedModified = tickSpeed + 0.04 * score;
 
     for (int i = 0; i < roadSegments; i++) {
       drawSegment(speedx * time % segmentLength, -1 * segmentLength * (i - segmentOffset));
@@ -93,7 +98,7 @@ void draw() {
       dead = true;
       time = 0;
     }
-    println(countdown);
+
 
     drawSphere();
     updatePos();
@@ -102,10 +107,14 @@ void draw() {
 
     score = floor(time/200);
 
-    if (countdown <= 0) {
-      annoy();
-    } else if (countdown > annoyLength && countdown - countdownStorage - annoyLength < 0) {
-      masterV.add(randomMove);
+    if (doAnnoy) {
+      countdown += -tickSpeedModified;
+      if (countdown <= 0) {
+        annoy();
+      } else if (countdown > annoyLength && countdown - countdownStorage - annoyLength < 0) {
+        masterV.add(randomMove);
+      }
+      println(countdown);
     }
   }
 }
@@ -171,24 +180,39 @@ void updatePos() {
   }
 
   masterP = masterP.add(masterV);
+  camPos = camPos.add(masterV);
 }
 
 void checkRestart() {
   if (keys[2]) {
     time = 0;
-    tickSpeed = 1;
+    tickSpeedModified = tickSpeed;
     masterP.set(startingPos);
     masterV.set(0, 0, 0);
     dead = false;
     score = 0;
     countdown = 400;
     annoyLength = 200;
+    camPos.set(width/2.0, height/2.0 - 0.4 * height, (height/2.0) / tan(PI*30.0 / 180.0) + 0.08 * width);
+
   }
 }
 
 void annoy() {
-  randomMove.set(random(-0.22, 0.22), 0, 0);
+  float y = random(-1,1);
+  y = y/abs(y);
+  float x = y * random(0.2, 0.42);
+  randomMove.set(x, 0, 0);
   waitingTime = int(random(-100, 100));
   countdownStorage = int(random(100, 1000));
   countdown = waitingTime + annoyLength + countdownStorage;
+}
+
+void createTower() {
+  fill(204, 102, 0);
+  pushMatrix();
+  translate(rectPos.x, rectPos.y);
+  rotateX(beginningSequence(doAnimation));
+  box(40);
+  popMatrix();
 }
