@@ -14,7 +14,6 @@ float annoyLength = 200;
 float waitingTime = 100;
 
 //setup variables
-PVector towerPos = new PVector(0, 0, 0);
 //config variables
 final float gravity = 9.8;
 final float friction = 0.95;
@@ -25,7 +24,7 @@ int segmentOffset = 1; //leave this at 1 for now
 int roadSegments = 30;
 int sphereDetail = 12;
 boolean doAnimation = false;
-float tickSpeed = 4; //starter value of tickspeed
+float tickSpeed = 3; //starter value of tickspeed
 float rotationControl = 30; //less means more control
 boolean doAnnoy = true;
 //these are relative in comparison to a 500x500 screen but will be adjusted before running
@@ -35,9 +34,14 @@ float speedx = 8; // in units per second
 float segmentLength = 200; //if you go too low you may need to change segment offset a bit
 PVector startingPos = new PVector(250, 275, 120);
 PVector rectPos = new PVector(50, 350);
+int towerSize = 100;
+int towerSegments = 30;
+boolean coolRenderMode = false;
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 float rotateX, rotateZ;
 float tickSpeedModified; //for modulating tickspeed inside draw()
+Tower towerLeft1, towerLeft2, towerLeft3, towerLeft4, towerLeft5;
+Tower towerRight1, towerRight2, towerRight3, towerRight4, towerRight5;
 
 void setup() {
   size(1000, 1000, P3D);
@@ -45,6 +49,8 @@ void setup() {
   textSize(128);
   makeRelative();
   smooth();
+  if (coolRenderMode)
+    noStroke();
 }
 
 void makeRelative() {
@@ -57,11 +63,25 @@ void makeRelative() {
   sphereSize = sphereSize/500 * width;
   speedx = speedx/500 * width;
   sphereControl = sphereControl/500 * width;
+  towerLeft1 = new Tower(50, -100, -900, 30);
+  towerLeft2 = new Tower(50, -300, -2900, 30);
+  towerLeft3 = new Tower(50, -600, -4900, 30);
+  towerLeft4 = new Tower(50, -800, -6900, 40);
+  towerLeft5 = new Tower(50, -1000, -8900, 50);
+  towerRight1 = new Tower(950, -100, -900, 30);
+  towerRight2 = new Tower(950, -300, -2900, 30);
+  towerRight3 = new Tower(950, -600, -4900, 30);
+  towerRight4 = new Tower(950, -800, -6900, 40);
+  towerRight5 = new Tower(950, -1000, -8900, 50);
+
+
+  textAlign(CENTER);
 }
 
 void draw() {
+  fill(23, 102, 0);
 
-  pointLight(255, 255, 255, 15* width/16, 0, 900 - time);
+  pointLight(255, 255, 255, 15* width/16, 0, 600);
   ambientLight(20, 90, 20, width/2, 0, 0);
 
   rotateX = speedx * time / sphereSize;
@@ -86,7 +106,7 @@ void draw() {
     time += tickSpeedModified;
 
     background(150);
-    camera(camPos.x, camPos.y , camPos.z , camPos.x, camPos.y + 0.4 * height, 0, 0, 1, 0);
+    camera(camPos.x, camPos.y, camPos.z, camPos.x, camPos.y + 0.4 * height, 0, 0, 1, 0);
 
     tickSpeedModified = tickSpeed + 0.04 * score;
 
@@ -94,18 +114,50 @@ void draw() {
       drawSegment(speedx * time % segmentLength, -1 * segmentLength * (i - segmentOffset));
     } //drawing all the segements of the road here
 
+
+
+    towerLeft1.render();
+    towerLeft2.render();
+    towerLeft3.render();
+    towerLeft4.render();
+    towerLeft5.render();   
+
+    towerRight1.render();
+    towerRight2.render();
+    towerRight3.render();
+    towerRight4.render();
+    towerRight5.render();
+
+    drawSphere();
+
     if (masterP.x > 0.886 * width || masterP.x < 0.116 * width) {
       dead = true;
       time = 0;
     }
 
-
-    drawSphere();
     updatePos();
     checkRestart();
-    text(score, width/16, height/3, time % 2000 - 900); 
-
+    
+    pushMatrix();
     score = floor(time/200);
+    stroke(10);
+    fill(255, 0, 0);
+    text(score, width/2, height/2, -900);
+    
+    text(tickSpeedModified, width/2 , height/2 - 200, -900);
+    text(int(time), width/2, height/2 - 400, -900);
+    text("DEBUG", width/2, height/2 - 600, -900);
+    popMatrix();
+
+
+    //text(score, 17, 1200 - 3.2 * (time % 500), -4700 + speedx * (time % 500));
+    //pushMatrix();
+    //translate(width/2, height/2, -900);
+    ////fill(0,0,0);
+    //////text(score, -40, 40, 200);
+    //fill(255,0,0);
+    //box(100);
+    //popMatrix();
 
     if (doAnnoy) {
       countdown += -tickSpeedModified;
@@ -194,12 +246,11 @@ void checkRestart() {
     countdown = 400;
     annoyLength = 200;
     camPos.set(width/2.0, height/2.0 - 0.4 * height, (height/2.0) / tan(PI*30.0 / 180.0) + 0.08 * width);
-
   }
 }
 
 void annoy() {
-  float y = random(-1,1);
+  float y = random(-1, 1);
   y = y/abs(y);
   float x = y * random(0.2, 0.42);
   randomMove.set(x, 0, 0);
@@ -208,11 +259,26 @@ void annoy() {
   countdown = waitingTime + annoyLength + countdownStorage;
 }
 
-void createTower() {
-  fill(204, 102, 0);
-  pushMatrix();
-  translate(rectPos.x, rectPos.y);
-  rotateX(beginningSequence(doAnimation));
-  box(40);
-  popMatrix();
+
+class Tower {
+  PVector position = new PVector(0, 0, 0);
+  int segmentsx;
+  Tower(float x, float y, float z, int segments) {
+    position.set(x, y, z);
+    segmentsx = segments;
+  }
+
+  void render() {
+    for (int i = 0; i < segmentsx; i++) {
+      drawBox(speedx * (time % 250), towerSize * i - 3.2 * (time % 155));
+    }
+  }
+
+  void drawBox(float move, float offset) {
+    fill(204, 102, 0);
+    pushMatrix();
+    translate(position.x, position.y + offset, position.z + move);
+    box(towerSize);
+    popMatrix();
+  }
 }
