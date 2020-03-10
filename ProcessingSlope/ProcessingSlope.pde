@@ -141,17 +141,15 @@ void draw() {
     checkRestart();
     fuckYouDie();
 
-<<<<<<< HEAD
     //pushMatrix();
     score = floor(time/200);
     fill(255, 0, 0);
-    text(score, camPos.x, camPos.y + 400, -900);
+    //text(score, camPos.x, camPos.y + 400, -900);
 
-    text(keycounter, camPos.x, camPos.y + 200, -900);
-    text(int(time), camPos.x, camPos.y, -900);
+    //text(keycounter, camPos.x, camPos.y + 200, -900);
+    //text(int(time), camPos.x, camPos.y, -900);
     //text("DEBUG", width/2, height/2 - 600, -900);
     //popMatrix();
-=======
     pushMatrix(); //debug text
     fill(255, 0, 0);
     text(score, width/2, height/2, -900);
@@ -159,7 +157,7 @@ void draw() {
     text(int(time), width/2, height/2 - 400, -900);
     text("DEBUG", width/2, height/2 - 600, -900);
     popMatrix();
->>>>>>> c6e061322ff656fa4c3112805313f35b1b5c1723
+
 
 
     //text(score, 17, 1200 - 3.2 * (time % 500), -4700 + speedx * (time % 500));
