@@ -1,0 +1,24 @@
+void render() {
+  drawRoad();
+  towerLeft1.render();
+  towerLeft2.render();
+  towerLeft3.render();
+  towerLeft4.render();
+  towerLeft5.render();   
+  towerLeft6.render();
+  towerLeft7.render();
+  towerLeft8.render();
+  towerLeft9.render();
+  towerLeft10.render();  
+  towerRight1.render();
+  towerRight2.render();
+  towerRight3.render();
+  towerRight4.render();
+  towerRight5.render();
+  towerRight6.render();
+  towerRight7.render();
+  towerRight8.render();
+  towerRight9.render();
+  towerRight10.render();
+  drawSphere();
+}

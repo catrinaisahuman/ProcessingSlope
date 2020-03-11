@@ -25,7 +25,19 @@ void updatePos() {
 
 void checkRestart() {
   if (keys[2]) {
-    time = 0;
+   restart();
+   startingScore = 0;
+   checkpointUsed = false;
+  }
+  if (keys[0]) {
+   restart();
+   startingScore = checkpoint;
+   checkpointUsed = true;
+  }
+}
+
+void restart() {
+   time = 0;
     tickSpeedModified = tickSpeed;
     masterP.set(startingPos);
     masterV.set(0, 0, 0);
@@ -34,7 +46,6 @@ void checkRestart() {
     countdown = 400;
     annoyWaitModified = 200;
     camPos.set(width/2.0, height/2.0 - 0.4 * height, (height/2.0) / tan(PI*30.0 / 180.0) + 0.08 * width);
-  }
 }
 
 void annoy() {
