@@ -1,7 +1,7 @@
 // DESERTSLOPE BY WILLDEPUE && ELIJAHSMITH
 //setup variables
-PVector masterV = new PVector(0, 0, 0);
-PVector masterP = new PVector();
+PVector masterV = new PVector(0, 5, 0);
+PVector masterP = new PVector(0, 5, 0);
 PVector camPos = new PVector();
 PVector randomMove = new PVector(0, 0, 0);
 float time = 0;
@@ -42,7 +42,7 @@ float sphereSize = 50;
 float speedx = 8; // in units per second
 float segmentLength = 200; //if you go too low you may need to change segment offset a bit
 float hardness = 1;
-boolean doAnimation = true;
+boolean doAnimation = false;
 boolean doAnnoy = true;
 boolean coolRenderMode = false;
 boolean debug = false;
@@ -74,7 +74,7 @@ void setup() {
   initalizeTowers();
   titlePos = new PVector(width/2, height/2 - 205, -1000);
   randomSeed(1); //add some pattern sense and helps for checksum
-  sky = loadImage("sky.jpg");
+  sky = loadImage("desert.jpg");
 }
 
 
@@ -82,7 +82,7 @@ void setup() {
 void draw() {
   sky.resize(1000, 1000);
   background(sky);
-  
+   
   println(frameRate);
   rotateX = speedx * time / sphereSize;
   rotateZ = masterV.x/rotationRenderControl * time / sphereSize;
