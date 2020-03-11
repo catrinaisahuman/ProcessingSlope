@@ -141,7 +141,6 @@ void draw() {
     checkRestart();
     fuckYouDie();
 
-
     //pushMatrix();
     score = floor(time/200);
     fill(255, 0, 0);
@@ -151,6 +150,7 @@ void draw() {
     text(int(time), camPos.x, camPos.y, -900);
     //text("DEBUG", width/2, height/2 - 600, -900);
     //popMatrix();
+
 
 
     //text(score, 17, 1200 - 3.2 * (time % 500), -4700 + speedx * (time % 500));
