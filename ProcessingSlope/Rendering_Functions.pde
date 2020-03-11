@@ -13,7 +13,7 @@ class Tower {
   }
 
   void drawBox(float move, float offset) {
-    fill(204, 102, 0);
+    fill(38, 100, 100);
     pushMatrix();
     translate(position.x, position.y + offset, position.z + move);
     box(towerSize);
@@ -31,7 +31,7 @@ void drawRoad() {
 
 
 void drawSegment(float move, float offset) {
-  fill(204, 102, 0);
+  fill(38, 100, 100);
   pushMatrix();
   translate(rectPos.x, rectPos.y);
   rotateX(beginningSequence(doAnimation));
@@ -45,7 +45,7 @@ void drawSphere() {
   rotateX(rotateX);
   rotateZ(rotateZ);
   //noFill();
-  fill(23, 102, 0);
+  fill(23, 100, 100);
   sphereDetail(sphereDetail);
   sphere(sphereSize);
   popMatrix();
