@@ -12,11 +12,14 @@ float countdown = 400;
 float countdownStorage = 0;
 float waitingTime = 100;
 int keycounter = 0; //basically what this does is track how long you've been holding a key down so we can mess with people
+float keyHoldGracePeriod = int(random(20, 120));
+// end setup variables
+
 //config variables
 final float gravity = 9.8;
 final float friction = 0.95;
 final float bounce = 0.1;
-final int startingScore = 0;
+final int startingScore = 400;
 final float tickSpeed = 1; //starter value of tickspeed
 final float annoyWait = 200;
 //more config variables
@@ -39,6 +42,7 @@ int towerSize = 100;
 int towerSegments = 30;
 boolean coolRenderMode = false;
 float hardness = 1;
+
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 float rotateX, rotateZ;
 float tickSpeedModified; //for modulating tickspeed inside draw()
@@ -100,6 +104,7 @@ void draw() {
     score = startingScore + floor(time/200);
     hardness = 1 + score * 0.000005;
     tickSpeedModified = tickSpeed + 0.04 * score;
+    
 
     background(150);
     camera(camPos.x, camPos.y, camPos.z, camPos.x, camPos.y + 0.4 * height, 0, 0, 1, 0);

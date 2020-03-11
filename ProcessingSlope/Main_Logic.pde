@@ -52,9 +52,9 @@ void annoy() {
 void fuckYouDie() {
   if (keys[1] || keys[3]) {
     keycounter += 1;
-  } else keycounter = 0;
+  } else keycounter = 0; genGracePeriod();
 
-  if (keycounter >= random(20, 40)) { //because predictability is wrong
+  if (keycounter >= keyHoldGracePeriod) { //because predictability is wrong
     randomMove.mult(-1); //reverse the direction of the drift
     keycounter = 0; //set counter back
   }
@@ -66,4 +66,9 @@ void checkDeath() {
     dead = true;
     time = 0;
   }
+}
+
+
+void genGracePeriod() {
+  keyHoldGracePeriod = int(random(20, 120));
 }
