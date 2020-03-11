@@ -42,8 +42,8 @@ float sphereSize = 50;
 float speedx = 8; // in units per second
 float segmentLength = 200; //if you go too low you may need to change segment offset a bit
 float hardness = 1;
-boolean doAnimation = false;
-boolean doAnnoy = false;
+boolean doAnimation = true;
+boolean doAnnoy = true;
 boolean coolRenderMode = false;
 boolean debug = false;
 boolean checkpointUsed = false;
@@ -141,8 +141,8 @@ void draw() {
     } else {
       coolRenderMode = false;
     }
-    println(coolRenderMode);
-    println(scoreMod200);
+    //println(coolRenderMode);
+    //println(scoreMod200);
 
     background(150);
     camera(camPos.x, camPos.y, camPos.z, camPos.x, camPos.y + 0.4 * height, 0, 0, 1, 0);
