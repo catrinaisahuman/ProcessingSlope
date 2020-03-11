@@ -74,7 +74,7 @@ void setup() {
   initalizeTowers();
   titlePos = new PVector(width/2, height/2 - 205, -1000);
   randomSeed(1); //add some pattern sense and helps for checksum
-  sky = loadImage("sky.jpg");
+  sky = loadImage("desert.jpg");
 }
 
 
