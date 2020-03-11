@@ -58,6 +58,8 @@ PFont font;
 int scoreMod100;
 int scoreMod200;
 
+PImage sky;
+
 
 void setup() {
   size(1000, 1000, P3D);
@@ -72,12 +74,16 @@ void setup() {
   initalizeTowers();
   titlePos = new PVector(width/2, height/2 - 205, -1000);
   randomSeed(1); //add some pattern sense and helps for checksum
+  sky = loadImage("sky.jpg");
 }
 
 
 
 void draw() {
-
+  sky.resize(1000, 1000);
+  background(sky);
+  
+  println(frameRate);
   rotateX = speedx * time / sphereSize;
   rotateZ = masterV.x/rotationRenderControl * time / sphereSize;
   scoreMod200 = score % 200;
@@ -144,7 +150,7 @@ void draw() {
     //println(coolRenderMode);
     //println(scoreMod200);
 
-    background(150);
+    //background(150);
     camera(camPos.x, camPos.y, camPos.z, camPos.x, camPos.y + 0.4 * height, 0, 0, 1, 0);
     render();
 
