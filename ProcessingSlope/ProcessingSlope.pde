@@ -19,29 +19,30 @@ float keyHoldGracePeriod = int(random(20, 120));
 final float gravity = 9.8;
 final float friction = 0.95;
 final float bounce = 0.1;
-final int startingScore = 400;
+final int startingScore = 00;
 final float tickSpeed = 1; //starter value of tickspeed
 final float annoyWait = 200;
 //more config variables
-int segmentOffset = 1; //leave this at 1 for now
-int roadSegments = 50;
-int sphereDetail = 12;
-boolean doAnimation = true;
-float rotationRenderControl = 30; //less means more control
-boolean doAnnoy = true;
 //these are relative in comparison to a 500x500 screen but will be adjusted before running
-float sphereControl = 0.2;
-float sphereSize = 50;
-float speedx = 8; // in units per second
-float segmentLength = 200; //if you go too low you may need to change segment offset a bit
 PVector startingPos = new PVector(250, 275, 120);
 PVector rectPos = new PVector(50, 350);
 PVector towerPosLeft = new PVector(50, 0, 0);
 PVector towerPosRight = new PVector(950, 0, 0);
+int segmentOffset = 1; //leave this at 1 for now
+int roadSegments = 50;
+int sphereDetail = 12;
 int towerSize = 100;
 int towerSegments = 30;
-boolean coolRenderMode = false;
+float rotationRenderControl = 30; //less means more control
+float sphereControl = 0.2;
+float sphereSize = 50;
+float speedx = 8; // in units per second
+float segmentLength = 200; //if you go too low you may need to change segment offset a bit
 float hardness = 1;
+boolean doAnimation = true;
+boolean doAnnoy = true;
+boolean coolRenderMode = false;
+boolean debug = false;
 
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 float rotateX, rotateZ;
@@ -86,7 +87,6 @@ void draw() {
 
     textSize(90);
     text("DEAD", camPos.x, camPos.y + 600, time - 0.8 * width); 
-
     text("PRESS X", camPos.x, camPos.y + 800, time - 0.8 * width);
     textSize(32);
 
@@ -104,7 +104,7 @@ void draw() {
     score = startingScore + floor(time/200);
     hardness = 1 + score * 0.000005;
     tickSpeedModified = tickSpeed + 0.04 * score;
-    
+
 
     background(150);
     camera(camPos.x, camPos.y, camPos.z, camPos.x, camPos.y + 0.4 * height, 0, 0, 1, 0);
@@ -144,19 +144,45 @@ void draw() {
     //text(int(time), camPos.x, camPos.y, -900);
     //text("DEBUG", width/2, height/2 - 600, -900);
     //popMatrix();
-    pushMatrix(); //debug text
-    fill(0, 0, 0);
-    text(score, width/2, height/2 - 200, -900);
-    if (doAnnoy) {
-      text("ANNOY ON", width/2, height/2 - 550, -900);
-    } else {
-      text("ANNOY OFF", width/2, height/2 - 550, -900);
-    }
+    //debug text
 
-    text(hardness, width/2, height/2 - 450, -900);
-    text("TIME : " + int(time), width/2, height/2 - 500, -900);
-    text("DEBUG", width/2, height/2 - 600, -900);
-    popMatrix();
+    if (score >=  500) {
+      background(150);
+      camera(camPos.x, camPos.y, camPos.z, camPos.x, camPos.y + 0.4 * height, 0, 0, 1, 0);
+      text("YOUR TIME WAS : " + time, width/2, height/2 - 300, -900);
+      text("CONGRATS YOU WON", width/2, height/2 - 350, -900);
+      text("GET TO 1000 TO HAVE A CHANCE TO WIN THE $5", width/2, height/2 - 450, -900);
+      text(score, width/2, height/2 - 200, -900);
+    } else {
+
+
+      if (debug) {
+        if (doAnnoy) {
+          text("ANNOY ON", width/2, height/2 - 550, -900);
+        } else {
+          text("ANNOY OFF", width/2, height/2 - 550, -900);
+        }
+
+        text(hardness, width/2, height/2 - 450, -900);
+        text("TIME : " + int(time), width/2, height/2 - 500, -900);
+        text("DEBUG", width/2, height/2 - 600, -900);
+      } else {
+        fill(0, 0, 0);
+        text(score, width/2, height/2 - 200, -900);
+        text("GET TO 500 TO WIN", width/2, height/2 - 250, -900);
+        text("GET TO 1000 FOR $5", width/2, height/2 - 300, -900);
+        text("PRESS X TO RESTART", width/2, height/2 - 350, -900);
+        text("EARLY ACCESS : Version Pre-Alpha", -2000, height/2 - 550, -4000);
+        textSize(15);
+        text("TERMS AND CONDITIONS TO WIN ARE SUCH 1. THAT YOUR TIME DOES NOT MATCH ANOTHER PLAYERS 2. THAT YOU DID NOT CHEAT THE GAME OR SKEW THE CONTEST IN YOUR FAVOR 3. THAT WILL DEPUE LIKES YOU AND THINKS YOU DESERVE THE WIN", width/2 + 700 + time/2, height/2 - 400, -900);
+        textSize(32);
+
+        text("WHY ARE YOU READING THIS FOCUS ON THE GAME", 3500, height/2 - 550, -5000);
+        text("IT'S PRETTY FUCKING HARD BUT YOU CAN WIN", width/2, height/2 - 550, -900);
+        text("TIME : " + int(time), width/2, height/2 - 500, -900);
+        text("DESERTSLOPE by WILLDEPUE && ELIJAHSMITH", width/2, height/2 - 600, -900);
+      }
+    }
 
 
 
@@ -169,7 +195,7 @@ void draw() {
     //box(100);
     //popMatrix();
 
-    println(countdown);
+    //println(countdown);
   }
 }
 
