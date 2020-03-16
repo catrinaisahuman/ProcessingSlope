@@ -15,6 +15,7 @@ void updatePos() {
 
   if (doAnnoy) {
     countdown += -tickSpeedModified;
+    println(countdown);
     if (countdown <= 0) {
       annoy();
     } else if (countdown > annoyWait && countdown - countdownStorage - annoyWait < 0) {
