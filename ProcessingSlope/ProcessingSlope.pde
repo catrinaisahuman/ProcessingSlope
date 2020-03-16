@@ -19,7 +19,7 @@ float keyHoldGracePeriod = int(random(20, 120));
 final float gravity = 9.8;
 final float friction = 0.95;
 final float bounce = 0.1;
-int startingScore = 0;
+int startingScore = 500;
 final float tickSpeed = 1; //starter value of tickspeed
 final float annoyWait = 200;
 //more config variables
@@ -98,8 +98,8 @@ void draw() {
     if (checkpointUsed) {
       ambientLight(255, 100, 255, width/2, 0, 0);
     } else {
-      pointLight(0, 0, 100, 15* width/16, 0, 600);
-      ambientLight(120, 360, 360, width/2, 0, 0);
+      pointLight(0, 0, 360, 15* width/16, 0, 600);
+      ambientLight(map(sin(time/300), -1, 1, 0, 360), 360, 360, width/2, 0, 0);
     }
   }
 
