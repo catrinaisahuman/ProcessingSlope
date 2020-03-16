@@ -80,7 +80,7 @@ void setup() {
 
 
 void draw() {
-  //sky.resize(1000, 1000);
+  //sky.resize(width, height);
   background(100);
   
   println(frameRate);
