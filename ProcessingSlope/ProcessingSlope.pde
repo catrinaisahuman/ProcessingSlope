@@ -63,7 +63,7 @@ PImage sky;
 
 void setup() {
   size(1000, 1000, P3D);
-  colorMode(HSB, 100);
+  colorMode(HSB, 360);
   font = createFont("Minecraft.otf", 32);
   frameRate(60);
   textSize(128);
@@ -81,15 +81,15 @@ void setup() {
 
 
 void draw() {
-  sky.resize(1000, 1000);
-  background(sky);
+  //sky.resize(1000, 1000);
+  background(0, 0, 180);
 
   println(frameRate);
   rotateX = speedx * time / sphereSize;
   rotateZ = masterV.x/rotationRenderControl * time / sphereSize;
   scoreMod200 = score % 200;
   scoreMod100 = score % 100;
-  fill(23, 255, 255);
+  fill(23, 360, 360);
 
 
   if ((score % 100) < 20 && score > 20) {
@@ -98,8 +98,8 @@ void draw() {
     if (checkpointUsed) {
       ambientLight(255, 100, 255, width/2, 0, 0);
     } else {
-      pointLight(255, 255, 255, 15* width/16, 0, 600);
-      ambientLight(20, 90, 20, width/2, 0, 0);
+      pointLight(0, 0, 100, 15* width/16, 0, 600);
+      ambientLight(120, 360, 360, width/2, 0, 0);
     }
   }
 
