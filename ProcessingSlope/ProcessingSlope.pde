@@ -63,6 +63,7 @@ PImage sky;
 
 void setup() {
   size(1000, 1000, P3D);
+  colorMode(HSB, 360);
   font = createFont("Minecraft.otf", 32);
   frameRate(60);
   textSize(128);
@@ -80,15 +81,16 @@ void setup() {
 
 
 void draw() {
-  //sky.resize(width, height);
-  background(100);
-  
-  //println(frameRate);
+  //sky.resize(1000, 1000);
+  background(0, 0, 180);
+
+  println(frameRate);
+
   rotateX = speedx * time / sphereSize;
   rotateZ = masterV.x/rotationRenderControl * time / sphereSize;
   scoreMod200 = score % 200;
   scoreMod100 = score % 100;
-  fill(23, 102, 0);
+  fill(23, 360, 360);
 
 
   if ((score % 100) < 20 && score > 20) {
@@ -97,8 +99,8 @@ void draw() {
     if (checkpointUsed) {
       ambientLight(255, 100, 255, width/2, 0, 0);
     } else {
-      pointLight(255, 255, 255, 15* width/16, 0, 600);
-      ambientLight(20, 90, 20, width/2, 0, 0);
+      pointLight(0, 0, 360, 15* width/16, 0, 600);
+      ambientLight(map(sin(time/300), -1, 1, 0, 360), 360, 360, width/2, 0, 0);
     }
   }
 
@@ -111,7 +113,7 @@ void draw() {
     background(255);
     camera(camPos.x, camPos.y, camPos.z, camPos.x, camPos.y + 0.4 * height, 0, 0, 1, 0);
     text("TAKE A SCREENSHOT", camPos.x, camPos.y + 400, -300);
-    text("CHECKSUM" + time + countdown + tickSpeedModified + random(-1,1), camPos.x, camPos.y + 600, -300);
+    text("CHECKSUM" + time + countdown + tickSpeedModified + random(-1, 1), camPos.x, camPos.y + 600, -300);
   } else if (dead) {
     time += tickSpeedModified;
 
@@ -182,13 +184,13 @@ void draw() {
       if (score > 600) {
         render();
         pushMatrix();
-        fill(150, 40, 0);
+        fill(100, 255, 255);
         translate(titlePos.x, titlePos.y, titlePos.z); 
         rect(-1 * titleSize.x/2, -1 * titleSize.y/2, titleSize.x, titleSize.y);
         popMatrix();
       }
       camera(camPos.x, camPos.y, camPos.z, camPos.x, camPos.y + 0.4 * height, 0, 0, 1, 0);
-      fill(0, 255, 0);
+      fill(0, 255, 255);
       text("DISTANCE LEFT : " + (1000 - score) + "ft", width/2, height/2 - 300, -900);
       text("CONGRATS YOU WON", width/2, height/2 - 350, -900);
       text("GET TO 1000 TO HAVE A CHANCE TO WIN THE $5", width/2, height/2 - 450, -900);
@@ -210,12 +212,12 @@ void draw() {
         text("DEBUG", width/2, height/2 - 600, -900);
       } else {
         pushMatrix();
-        fill(150, 40, 0);
+        fill(150, 255, 255);
         translate(titlePos.x, titlePos.y, titlePos.z); 
         rect(-1 * titleSize.x/2, -1 * titleSize.y/2, titleSize.x, titleSize.y);
         popMatrix();
 
-        fill(0, 255, 0);
+        fill(0, 255, 255);
         textSize(50);
         text(1000 - score + "ft", width/2, height/2 - 200, -900);
         textSize(32);
@@ -237,7 +239,7 @@ void draw() {
 
         if (checkpointUsed) {
           textSize(90);
-          fill(0, 0, 255);
+          fill(0, 255, 255);
           text("YOU ARE USING CHECKPOINTS", camPos.x, camPos.y + 400, -300);
           textSize(32);
         }
