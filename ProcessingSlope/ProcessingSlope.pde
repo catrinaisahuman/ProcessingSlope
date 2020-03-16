@@ -19,7 +19,7 @@ float keyHoldGracePeriod = int(random(20, 120));
 final float gravity = 9.8;
 final float friction = 0.95;
 final float bounce = 0.1;
-int startingScore = 500;
+int startingScore = 0;
 final float tickSpeed = 1; //starter value of tickspeed
 final float annoyWait = 200;
 //more config variables
