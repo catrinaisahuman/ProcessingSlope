@@ -81,7 +81,7 @@ void setup() {
 
 void draw() {
   //sky.resize(1000, 1000);
-  //background(sky);
+  background(100);
   
   println(frameRate);
   rotateX = speedx * time / sphereSize;
