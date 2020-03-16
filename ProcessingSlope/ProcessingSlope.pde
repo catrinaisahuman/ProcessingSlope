@@ -19,7 +19,7 @@ float keyHoldGracePeriod = int(random(20, 120));
 final float gravity = 9.8;
 final float friction = 0.95;
 final float bounce = 0.1;
-int startingScore = 0;
+int startingScore = 900;
 final float tickSpeed = 1; //starter value of tickspeed
 final float annoyWait = 200;
 //more config variables
@@ -43,7 +43,7 @@ float speedx = 8; // in units per second
 float segmentLength = 200; //if you go too low you may need to change segment offset a bit
 float hardness = 1;
 boolean doAnimation = true;
-boolean doAnnoy = true;
+boolean doAnnoy = false;
 boolean coolRenderMode = false;
 boolean debug = false;
 boolean checkpointUsed = false;
@@ -83,7 +83,7 @@ void draw() {
   //sky.resize(1000, 1000);
   //background(sky);
   
-  println(frameRate);
+  //println(frameRate);
   rotateX = speedx * time / sphereSize;
   rotateZ = masterV.x/rotationRenderControl * time / sphereSize;
   scoreMod200 = score % 200;
@@ -110,7 +110,6 @@ void draw() {
   if (score >= 1000) {
     background(255);
     camera(camPos.x, camPos.y, camPos.z, camPos.x, camPos.y + 0.4 * height, 0, 0, 1, 0);
-
     text("TAKE A SCREENSHOT", camPos.x, camPos.y + 400, -300);
     text("CHECKSUM" + time + countdown + tickSpeedModified + random(-1,1), camPos.x, camPos.y + 600, -300);
   } else if (dead) {
@@ -134,7 +133,18 @@ void draw() {
     time += tickSpeedModified;
     score = startingScore + floor(time/200);
     hardness = 1 + score * 0.000005;
-    tickSpeedModified = tickSpeed + 0.04 * score;
+    
+    int speedUp = 40;
+    int endStagnant = 100;
+    float endStagnantSpeed = tickSpeed + 0.04 * endStagnant;
+    float increaseSpeed = endStagnantSpeed / speedUp;
+    if (score < speedUp) {
+      tickSpeedModified = tickSpeed + increaseSpeed * score;
+    } else if (score >= speedUp && score < endStagnant) {
+      tickSpeedModified = endStagnantSpeed;
+    } else tickSpeedModified = tickSpeed + 0.04 * score;
+    
+    println(tickSpeedModified);
     if ((score % 100) == 0) {
       checkpoint = score;
     }
@@ -169,7 +179,6 @@ void draw() {
     //debug text
 
     if (score >=  500 && !checkpointUsed) {
-      background(150);
       if (score > 600) {
         render();
         pushMatrix();
