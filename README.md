@@ -1,14 +1,9 @@
 # Roadmap:
 
-### Version 1
-Ball rolls with animation.
-Deathscreen.
-
-### Version 2
-Relative scaling.
-Random movement.
-
 ### Version 3
-Make everything look worse.
+Add more Biomes and Port to HSB
+
+### Version 4
+Add Background and Fix CheckSum
 
 ### COMPLETE

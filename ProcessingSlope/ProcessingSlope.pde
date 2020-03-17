@@ -19,29 +19,34 @@ float keyHoldGracePeriod = int(random(20, 120));
 final float gravity = 9.8;
 final float friction = 0.95;
 final float bounce = 0.1;
-final int startingScore = 400;
+int startingScore = 0;
 final float tickSpeed = 1; //starter value of tickspeed
 final float annoyWait = 200;
 //more config variables
-int segmentOffset = 1; //leave this at 1 for now
-int roadSegments = 50;
-int sphereDetail = 12;
-boolean doAnimation = true;
-float rotationRenderControl = 30; //less means more control
-boolean doAnnoy = true;
 //these are relative in comparison to a 500x500 screen but will be adjusted before running
-float sphereControl = 0.2;
-float sphereSize = 50;
-float speedx = 8; // in units per second
-float segmentLength = 200; //if you go too low you may need to change segment offset a bit
 PVector startingPos = new PVector(250, 275, 120);
 PVector rectPos = new PVector(50, 350);
 PVector towerPosLeft = new PVector(50, 0, 0);
 PVector towerPosRight = new PVector(950, 0, 0);
+PVector titleSize = new PVector(300, 80);
+PVector titlePos;
+int segmentOffset = 1; //leave this at 1 for now
+int roadSegments = 50;
+int sphereDetail = 12;
 int towerSize = 100;
 int towerSegments = 30;
-boolean coolRenderMode = false;
+int checkpoint = 0;
+float rotationRenderControl = 30; //less means more control
+float sphereControl = 0.2;
+float sphereSize = 50;
+float speedx = 8; // in units per second
+float segmentLength = 200; //if you go too low you may need to change segment offset a bit
 float hardness = 1;
+boolean doAnimation = true;
+boolean doAnnoy = true;
+boolean coolRenderMode = false;
+boolean debug = false;
+boolean checkpointUsed = false;
 
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 float rotateX, rotateZ;
@@ -50,43 +55,70 @@ Tower towerLeft1, towerLeft2, towerLeft3, towerLeft4, towerLeft5, towerLeft6, to
 Tower towerRight1, towerRight2, towerRight3, towerRight4, towerRight5, towerRight6, towerRight7, towerRight8, towerRight9, towerRight10;
 float annoyWaitModified;
 PFont font;
+int scoreMod100;
+int scoreMod200;
+
+PImage sky;
+
 
 void setup() {
-  font = createFont("Minecraft.otf", 32);
   size(1000, 1000, P3D);
+  colorMode(HSB, 360);
+  font = createFont("Minecraft.otf", 32);
   frameRate(60);
   textSize(128);
   makeRelative();
   smooth();
-  if (coolRenderMode) {
-    noStroke();
-  }
   textFont(font);
   textAlign(CENTER);
   perspective(PI/3.0, width/height, camPos.z/10.0, camPos.z*200.0);
   initalizeTowers();
+  titlePos = new PVector(width/2, height/2 - 205, -1000);
+  randomSeed(1); //add some pattern sense and helps for checksum
+  sky = loadImage("desert.jpg");
 }
 
 
 
 void draw() {
-  fill(23, 102, 0);
-  if ((score % 100) < 20 && score > 20) {
-    ambientLight(20, 0, 0, width/2, 0, 0);
-  } else {
-    pointLight(255, 255, 255, 15* width/16, 0, 600);
-    ambientLight(20, 90, 20, width/2, 0, 0);
-  }
+  //sky.resize(1000, 1000);
+  background(0, 0, 180);
+
+  println(frameRate);
 
   rotateX = speedx * time / sphereSize;
   rotateZ = masterV.x/rotationRenderControl * time / sphereSize;
+  scoreMod200 = score % 200;
+  scoreMod100 = score % 100;
+  fill(23, 360, 360);
 
-  if (dead) {
+
+  if ((score % 100) < 20 && score > 20) {
+    ambientLight(20, 0, 0, width/2, 0, 0);
+  } else {
+    if (checkpointUsed) {
+      ambientLight(255, 100, 255, width/2, 0, 0);
+    } else {
+      pointLight(0, 0, 360, 15* width/16, 0, 600);
+      ambientLight(map(sin(time/300), -1, 1, 0, 360), 360, 360, width/2, 0, 0);
+    }
+  }
+
+  if (coolRenderMode) {
+    noStroke();
+  } else stroke(0.1);
+
+
+  if (score >= 1000) {
+    background(255);
+    camera(camPos.x, camPos.y, camPos.z, camPos.x, camPos.y + 0.4 * height, 0, 0, 1, 0);
+    text("TAKE A SCREENSHOT", camPos.x, camPos.y + 400, -300);
+    text("CHECKSUM" + time + countdown + tickSpeedModified + random(-1, 1), camPos.x, camPos.y + 600, -300);
+  } else if (dead) {
     time += tickSpeedModified;
 
     textSize(90);
     text("DEAD", camPos.x, camPos.y + 600, time - 0.8 * width); 
-
     text("PRESS X", camPos.x, camPos.y + 800, time - 0.8 * width);
     textSize(32);
 
@@ -103,54 +135,114 @@ void draw() {
     time += tickSpeedModified;
     score = startingScore + floor(time/200);
     hardness = 1 + score * 0.000005;
-    tickSpeedModified = tickSpeed + 0.04 * score;
     
+    int speedUp = 40;
+    int endStagnant = 100;
+    float endStagnantSpeed = tickSpeed + 0.04 * endStagnant;
+    float increaseSpeed = endStagnantSpeed / speedUp;
+    if (score < speedUp) {
+      tickSpeedModified = tickSpeed + increaseSpeed * score;
+    } else if (score >= speedUp && score < endStagnant) {
+      tickSpeedModified = endStagnantSpeed;
+    } else tickSpeedModified = tickSpeed + 0.04 * score;
+    
+    println(tickSpeedModified);
+    if ((score % 100) == 0) {
+      checkpoint = score;
+    }
+    if (score == 0) {
+      checkpointUsed = false;
+    }
 
-    background(150);
+    if (abs(60 - scoreMod200) <= 20 && score > 100) {
+      coolRenderMode = true;
+    } else {
+      coolRenderMode = false;
+    }
+    //println(coolRenderMode);
+    //println(scoreMod200);
+
+    //background(150);
     camera(camPos.x, camPos.y, camPos.z, camPos.x, camPos.y + 0.4 * height, 0, 0, 1, 0);
-
-    drawRoad();
-    towerLeft1.render();
-    towerLeft2.render();
-    towerLeft3.render();
-    towerLeft4.render();
-    towerLeft5.render();   
-    towerLeft6.render();
-    towerLeft7.render();
-    towerLeft8.render();
-    towerLeft9.render();
-    towerLeft10.render();  
-    towerRight1.render();
-    towerRight2.render();
-    towerRight3.render();
-    towerRight4.render();
-    towerRight5.render();
-    towerRight6.render();
-    towerRight7.render();
-    towerRight8.render();
-    towerRight9.render();
-    towerRight10.render();
-    drawSphere();
+    render();
 
     checkDeath();
     updatePos();
     checkRestart();
     fuckYouDie();
 
+    //text(keycounter, camPos.x, camPos.y + 200, -900);
+    //text(int(time), camPos.x, camPos.y, -900);
+    //text("DEBUG", width/2, height/2 - 600, -900);
+    //popMatrix();
+    //debug text
 
-    pushMatrix(); //debug text
-    fill(0, 0, 0);
-    text(score, width/2, height/2 - 200, -900);
-    if (doAnnoy) {
-      text("ANNOY ON", width/2, height/2 - 550, -900);
+    if (score >=  500 && !checkpointUsed) {
+      if (score > 600) {
+        render();
+        pushMatrix();
+        fill(100, 255, 255);
+        translate(titlePos.x, titlePos.y, titlePos.z); 
+        rect(-1 * titleSize.x/2, -1 * titleSize.y/2, titleSize.x, titleSize.y);
+        popMatrix();
+      }
+      camera(camPos.x, camPos.y, camPos.z, camPos.x, camPos.y + 0.4 * height, 0, 0, 1, 0);
+      fill(0, 255, 255);
+      text("DISTANCE LEFT : " + (1000 - score) + "ft", width/2, height/2 - 300, -900);
+      text("CONGRATS YOU WON", width/2, height/2 - 350, -900);
+      text("GET TO 1000 TO HAVE A CHANCE TO WIN THE $5", width/2, height/2 - 450, -900);
+      textSize(50);
+      text("YOU WIN", width/2, height/2 - 200, -900);
+      textSize(32);
+
     } else {
-      text("ANNOY OFF", width/2, height/2 - 550, -900);
-    }
 
-    text(hardness, width/2, height/2 - 450, -900);
-    text("TIME : " + int(time), width/2, height/2 - 500, -900);
-    text("DEBUG", width/2, height/2 - 600, -900);
-    popMatrix();
+
+      if (debug) {
+        if (doAnnoy) {
+          text("ANNOY ON", width/2, height/2 - 550, -900);
+        } else {
+          text("ANNOY OFF", width/2, height/2 - 550, -900);
+        }
+
+        text(hardness, width/2, height/2 - 450, -900);
+        text("TIME : " + int(time), width/2, height/2 - 500, -900);
+        text("DEBUG", width/2, height/2 - 600, -900);
+      } else {
+        pushMatrix();
+        fill(150, 255, 255);
+        translate(titlePos.x, titlePos.y, titlePos.z); 
+        rect(-1 * titleSize.x/2, -1 * titleSize.y/2, titleSize.x, titleSize.y);
+        popMatrix();
+
+        fill(0, 255, 255);
+        textSize(50);
+        text(1000 - score + "ft", width/2, height/2 - 200, -900);
+        textSize(32);
+        fill(0, 0, 0);
+        text("500ft TO WIN", width/2, height/2 - 430, -900);
+        text("OR FINISH FOR $5", width/2, height/2 - 400, -900);
+        text("PRESS C TO USE CHECKPOINT", width/2, height/2 - 520, -900);
+        text("PRESS X TO RESTART", width/2, height/2 - 480, -900);
+        text("EARLY ACCESS : Version 1.2", -2000, height/2 - 550, -4000);
+        textSize(15);
+        text("TERMS AND CONDITIONS TO WIN ARE SUCH 1. THAT YOUR TIME DOES NOT MATCH ANOTHER PLAYERS 2. THAT YOU DID NOT CHEAT THE GAME OR SKEW THE CONTEST IN YOUR FAVOR 3. THAT WILL DEPUE LIKES YOU AND THINKS YOU DESERVE THE WIN", width/2 + 700 + time/2, height/2 - 555, -900);
+        text("IT'S PRETTY HARD BUT YOU CAN WIN", width/2, height/2 - 575, -900);
+
+        textSize(32);
+
+        text("WHY ARE YOU READING THIS FOCUS ON THE GAME", 3500, height/2 - 550, -5000);
+
+        text("DESERTSLOPE by WILLDEPUE && ELIJAHSMITH", width/2, height/2 - 600, -900);
+
+        if (checkpointUsed) {
+          textSize(90);
+          fill(0, 255, 255);
+          text("YOU ARE USING CHECKPOINTS", camPos.x, camPos.y + 400, -300);
+          textSize(32);
+        }
+      }
+    }
 
 
 
@@ -163,13 +255,13 @@ void draw() {
     //box(100);
     //popMatrix();
 
-    println(countdown);
+    //println(countdown);
   }
 }
 
 
 void keyPressed() {
-  if (key=='w')
+  if (key=='c')
     keys[0]=true;
   if (key=='a' || keyCode == LEFT)
     keys[1]=true;
@@ -180,7 +272,7 @@ void keyPressed() {
 }
 
 void keyReleased() {
-  if (key=='w')
+  if (key=='c')
     keys[0]=false;
   if (key=='a' || keyCode == LEFT)
     keys[1]=false;
