@@ -171,9 +171,6 @@ void draw() {
     checkRestart();
     fuckYouDie();
 
-    //pushMatrix();
-    //text(score, camPos.x, camPos.y + 400, -900);
-
     //text(keycounter, camPos.x, camPos.y + 200, -900);
     //text(int(time), camPos.x, camPos.y, -900);
     //text("DEBUG", width/2, height/2 - 600, -900);
@@ -197,6 +194,7 @@ void draw() {
       textSize(50);
       text("YOU WIN", width/2, height/2 - 200, -900);
       textSize(32);
+
     } else {
 
 
